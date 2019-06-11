@@ -175,10 +175,11 @@ class FluidRule(RegisteredRule, ContinuingRule):
 
 
 class _BaseQuickRules(object):
-    def __init__(self, grammar):
+    def __init__(self, grammar=None):
         self._grammer = grammar
     def add_rule(self, rule):
-        self._grammer.add_rule(rule)
+        if self._grammer:
+            self._grammer.add_rule(rule)
 
 
 class QuickFluidRule(FluidRule):
@@ -249,10 +250,10 @@ class QuickFluidRules(_BaseQuickRules):
     element is the usual action, and whose second element is a dict of
     parameters to be passed as \*\*kwargs to `QuickFluidRule`.
     """
-    def __init__(self, grammar):
+    def __init__(self, grammar=None):
         """
         Not usually called directly, but rather via `ActiveGrammarRule`.
-        
+
         :param grammar: The Grammar to add rules to, generally a
             `RegistryGrammar` such as the `GlobalRegistry`.
         """
@@ -261,10 +262,11 @@ class QuickFluidRules(_BaseQuickRules):
             kwargs = {}
             kwargs["extras"] = getattr(self, "extras", None)
             kwargs["defaults"] = getattr(self, "defaults", None)
-            kwargs["context"] = getattr(self, "context", None)            
-            if isinstance(entry, (list, tuple)):             
+            kwargs["context"] = getattr(self, "context", None)
+            if isinstance(entry, (list, tuple)):
                 action = entry[0]
                 kwargs.update(entry[1])
             else:
                 action = entry
+
             self.add_rule(QuickFluidRule(spec, action, **kwargs))

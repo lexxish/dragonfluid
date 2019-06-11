@@ -248,6 +248,24 @@ class RegistryGrammar(Grammar):
         self.registry = _first_not_none(registry, Registry())
         _safe_kwargs(Grammar.__init__, self, name, **kwargs)
 
+    def add_quick_fluid_rules(self, rule):
+        import pydevd
+        pydevd.settrace("localhost", port=5678)
+        from dragonfluid._rules import _BaseQuickRules
+        for spec, entry in rule.mapping.items():
+            kwargs = {}
+            kwargs["extras"] = getattr(rule, "extras", None)
+            kwargs["defaults"] = getattr(rule, "defaults", None)
+            kwargs["context"] = getattr(rule, "context", None)
+            if isinstance(entry, (list, tuple)):
+                action = entry[0]
+                kwargs.update(entry[1])
+            else:
+                action = entry
+
+            from dragonfluid._rules import QuickFluidRule
+            self.add_rule(QuickFluidRule(spec, action, **kwargs), )
+
     # override -- you're not expected to need to know this is in place
     def activate_rule(self, rule):
         if getattr(rule, "_is_registered", False):
