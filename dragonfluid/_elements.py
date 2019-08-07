@@ -204,7 +204,7 @@ class SplitDictation(_RegistryElement, Dictation):
         appropriate type given the speech recognition system in use, without
         any alterations of any sort applied to the container contents. 
         """
-        return self._node.engine.DictationContainer(self._node.words())
+        return self._node.engine.DictationContainer(self._node.words(), self._string_methods)
     
     @property
     def full_container_trans(self):
@@ -216,7 +216,7 @@ class SplitDictation(_RegistryElement, Dictation):
         tag_indices = self.registry._get_literal_tag_indices(self.full_words_notrans)
         notrans_words = self._node.words()
         translated_words = [notrans_words[i] for i in range(len(notrans_words)) if i not in tag_indices]
-        return self._node.engine.DictationContainer(translated_words)
+        return self._node.engine.DictationContainer(translated_words, self._string_methods)
     
     @property
     def dictation(self):
@@ -277,7 +277,7 @@ class SplitDictation(_RegistryElement, Dictation):
         given the speech recognition system in use, without any alterations
         of any sort applied to the container contents. 
         """
-        return self._node.engine.DictationContainer(self._node.words()[:self.command_index])    
+        return self._node.engine.DictationContainer(self._node.words()[:self.command_index], self._string_methods)
     
     @property
     def dictation_container_trans(self):
@@ -290,7 +290,7 @@ class SplitDictation(_RegistryElement, Dictation):
         tag_indices = self.registry._get_literal_tag_indices(self.dictation_words_notrans)
         notrans_words = self._node.words()[:self.command_index]
         translated_words = [notrans_words[i] for i in range(len(notrans_words)) if i not in tag_indices]
-        return self._node.engine.DictationContainer(translated_words)
+        return self._node.engine.DictationContainer(translated_words, self._string_methods)
     
     @property
     def command(self):
@@ -351,7 +351,7 @@ class SplitDictation(_RegistryElement, Dictation):
         type given the speech recognition system in use, without any
         alterations of any sort applied to the container contents.
         """
-        return self._node.engine.DictationContainer(self._node.words()[self.command_index:])
+        return self._node.engine.DictationContainer(self._node.words()[self.command_index:], self._string_methods)
     
     @property
     def command_container_trans(self):
@@ -364,12 +364,12 @@ class SplitDictation(_RegistryElement, Dictation):
         tag_indices = self.registry._get_literal_tag_indices(self.command_words_notrans)
         notrans_words = self._node.words()[self.command_index:]
         translated_words = [notrans_words[i] for i in range(len(notrans_words)) if i not in tag_indices]
-        return self._node.engine.DictationContainer(translated_words)    
+        return self._node.engine.DictationContainer(translated_words, self._string_methods)
 
     @property
     def _formatted_words_list(self):
         if getattr(self, "_formatted_words_list_memo", None) is None:
-            self._formatted_words_list_memo = self._node.engine.DictationContainer(self._node.words()).format().split()
+            self._formatted_words_list_memo = self._node.engine.DictationContainer(self._node.words(), self._string_methods).format().split()
         return self._formatted_words_list_memo
 
 

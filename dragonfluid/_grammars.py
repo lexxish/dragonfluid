@@ -249,8 +249,6 @@ class RegistryGrammar(Grammar):
         _safe_kwargs(Grammar.__init__, self, name, **kwargs)
 
     def add_quick_fluid_rules(self, rule):
-        import pydevd
-        pydevd.settrace("localhost", port=5678)
         from dragonfluid._rules import _BaseQuickRules
         for spec, entry in rule.mapping.items():
             kwargs = {}
